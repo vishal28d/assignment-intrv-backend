@@ -1,52 +1,187 @@
+# Polling System - Backend
 
-# Polling App - Backend
+A backend server for a real-time polling application. It manages teacher actions, student participation, and communicates live poll updates via Socket.io.
 
-## Overview
-This project is the backend for a real-time polling system that allows teachers to create live polls and students to participate in them. The backend is built with **Node.js**, **Express.js**, and **MongoDB** for data storage. **Socket.IO** is used for real-time communication.
+## 🎯 Project Overview
 
-## Tech Stack
-- **Node.js** (Express.js for server-side logic)
-- **MongoDB** (for database storage)
-- **Socket.IO** (for real-time communication)
+This backend powers the following core functionality:
+
+* Teachers create questions/polls.
+* Students submit answers.
+* Both teacher and students receive **live updates** using WebSockets.
+* Poll states, timing, and transitions are controlled from the backend.
+
+Designed for the *Intervue.io Assignment — Live Polling System*.
 
 ---
 
-## Backend Setup
+## 🛠 Tech Stack
 
-### Prerequisites
-Make sure you have the following installed:
-- Node.js (developed with 22.5.1)
-- npm
-- MongoDB
+* **Node.js**
+* **Express.js** — HTTP API framework
+* **Socket.io** — real-time communication
+* **MongoDB (Mongoose)** — database for storing poll data
+* **dotenv** — environment variable management
 
-### Installation
+---
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/saran-mani/intervue-poll-backend.git
-   cd intervue-poll-backend
-   ```
+## 📁 Project Structure
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+```
+assignment-intrv-backend/
+├── src/
+│   ├── server.js            # Entry point — Express + Socket.io setup
+│   ├── app.js               # Express app configuration
+│   ├── config/              # DB connection
+│   ├── controllers/         # Business logic
+│   ├── models/              # Mongoose models
+│   ├── routes/              # API routes
+│   ├── socket/              # Socket.io event handlers
+│   └── utils/               # Helper functions
+├── package.json
+└── README.md
+```
 
-3. Install and start the MongoDB service:
-   ```bash
-   mongod
-   ```
+---
 
-4. Start the backend server:
-   ```bash
-   npm start
-   ```
+## ⚙️ Environment Variables
 
-## Running the Application
+Create a `.env` file with:
 
-1. The backend will be available at:
-   ```
-   http://localhost:3000
-   ```
+```
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+```
 
-2. The frontend communicates with the backend via Socket.IO and API endpoints for poll management.
+Add these variables manually in Render/Vercel since `.env` is not uploaded.
+
+---
+
+## 🚀 Getting Started
+
+### Install dependencies
+
+```
+npm install
+```
+
+### Run locally
+
+```
+npm start
+```
+
+Server runs at:
+
+```
+http://localhost:5000
+```
+
+---
+
+## 📦 Scripts
+
+| Command       | Description                        |
+| ------------- | ---------------------------------- |
+| `npm start`   | Start server using Node            |
+| `npm run dev` | Start server in dev mode (nodemon) |
+
+---
+
+## 📡 API Endpoints (Brief)
+
+### Authentication / Teacher
+
+```
+POST /teacher-login
+```
+
+Body:
+
+```json
+{
+  "email": "teacher@example.com",
+  "password": "123456"
+}
+```
+
+### Polling
+
+```
+POST /create-question
+GET /current-question
+POST /submit-answer
+GET /poll-results
+```
+
+> (Route names based on project analysis — update if you add more.)
+
+---
+
+## 🔌 WebSocket Events (Socket.io)
+
+* `connect` — new user connects
+* `new-question` — teacher broadcasts new question
+* `submit-answer` — student sends answer
+* `poll-results` — server emits updated results
+* `disconnect` — user leaves
+
+---
+
+## 🌐 Deployment Notes
+
+### Render Deployment
+
+* Set **Root Directory** = repository root
+* Start Command:
+
+```
+npm start
+```
+
+* Ensure `process.env.PORT` is used in `server.js`
+* Add environment variables under **Render → Environment**
+
+### Vercel Deployment (Frontend Only)
+
+> Vercel cannot host an Express server directly.
+> Use Vercel for frontend + Render for backend.
+
+---
+
+## ⚠️ Troubleshooting
+
+### 404 Errors
+
+If API returns:
+
+```
+Cannot POST //teacher-login
+```
+
+Fix your frontend `.env`:
+
+```
+VITE_API_URL=https://your-backend.onrender.com
+```
+
+(no trailing slash!)
+
+### Socket Not Connecting
+
+Ensure CORS setup:
+
+```js
+origin: ["http://localhost:5173", "https://your-frontend.vercel.app"]
+```
+
+---
+
+## 👨‍💻 Author
+
+**Vishal Maurya**
+GitHub: [https://github.com/vishal28d](https://github.com/vishal28d)
+
+---
+
+This backend forms the core logic and communication layer of the Live Polling System. Extend it with logging, authentication guards, performance improvements, and additi
